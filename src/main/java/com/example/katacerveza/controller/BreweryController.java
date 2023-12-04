@@ -1,6 +1,6 @@
 package com.example.katacerveza.controller;
 
-import com.example.katacerveza.exceptions.BreweryNotFoundException;
+import com.example.katacerveza.exceptions.NotFoundException;
 import com.example.katacerveza.model.Brewery;
 import com.example.katacerveza.repository.BreweryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,6 @@ public class BreweryController {
     }
     @GetMapping("/brewerie/{id}")
     public Brewery getBreweryById(@PathVariable Integer id){
-        return breweryRepository.findById(id).orElseThrow(() -> new BreweryNotFoundException(id));
+        return breweryRepository.findById(id).orElseThrow(() -> new NotFoundException("Brewery", id));
     }
 }

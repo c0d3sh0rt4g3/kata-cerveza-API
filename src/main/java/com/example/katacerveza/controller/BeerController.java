@@ -1,6 +1,6 @@
 package com.example.katacerveza.controller;
 
-import com.example.katacerveza.exceptions.BeerNotFoundException;
+import com.example.katacerveza.exceptions.NotFoundException;
 import com.example.katacerveza.exceptions.ExistingBeerException;
 import com.example.katacerveza.model.Beer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api")
 public class BeerController {
-    @Autowired
     private final BeerRepository beerRepository;
-
+    @Autowired
     public BeerController(BeerRepository beerRepository) {
         this.beerRepository = beerRepository;
     }
@@ -28,7 +27,7 @@ public class BeerController {
     @GetMapping("/beer/{id}")
     Beer getBeerById(@PathVariable Integer id)
     {
-        return beerRepository.findById(id).orElseThrow(() -> new BeerNotFoundException(id));
+        return beerRepository.findById(id).orElseThrow(() -> new NotFoundException("Beer", id));
     }
     @DeleteMapping("/beer/{id}")
     public ResponseEntity<?> deleteBeer(@PathVariable Integer id) {
@@ -37,7 +36,7 @@ public class BeerController {
                     beerRepository.delete(beer);
                     return ResponseEntity.status(HttpStatus.OK).body(beer.getName() + " deleted succesfully");
                 })
-                .orElseThrow(() -> new BeerNotFoundException(id));
+                .orElseThrow(() -> new NotFoundException("Beer", id));
     }
     @PostMapping("/beer")
     public ResponseEntity<Beer> postBeer(@RequestBody Beer givenBeer) {
@@ -56,7 +55,7 @@ public class BeerController {
                     setBeer(givenBeer, existingBeer);
                     return ResponseEntity.status(HttpStatus.OK).body(beerRepository.save(existingBeer)).getBody();
                 })
-                .orElseThrow(() ->  new BeerNotFoundException(id));
+                .orElseThrow(() ->  new NotFoundException("Beer", id));
     }
 
     private void setBeer(@RequestBody Beer givenBeer, Beer beerToSet) {
