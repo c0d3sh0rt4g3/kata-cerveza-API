@@ -28,7 +28,7 @@ public class BeerController {
     @GetMapping("/beer/{id}")
     Beer getBeerById(@PathVariable Integer id)
     {
-        return beerRepository.findById(id).orElse(null);
+        return beerRepository.findById(id).orElseThrow(() -> new BeerNotFoundException(id));
     }
     @DeleteMapping("/beer/{id}")
     public ResponseEntity<?> deleteBeer(@PathVariable Integer id) {
